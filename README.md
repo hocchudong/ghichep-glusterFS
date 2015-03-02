@@ -28,7 +28,7 @@ Chương trình có thể lưu trữ dữ liệu trên các mô hình, thiết b
 <a name="Khainiem"></a>
 ## 2. Một số khái niệm khi sử dụng GlusterFS 
 
-- Brich
+- Brick
 <ul>
 <li>Brick được định nghĩa bởi 1 server (name or IP) và 1 đường dẫn. Vd: 10.10.10.20:/mnt/brick (đã mount 1 partition (/dev/sdb1) vào /mnt)</li>
 <li>Mỗi brick có dung lượng bị giới hạn bởi filesystem....</li>
