@@ -50,8 +50,6 @@ Chương trình có thể lưu trữ dữ liệu trên các mô hình, thiết b
 
      <img src="http://i.imgur.com/vEvm0J7.png">
 	 
-	 *Nguồn: http://www.slideshare.net/openstackindia/glusterfs-and-openstack?related=3*
-
 <a name="Cacloai"></a>	 
 ## 3. Các loại volume trong GlusterFS 
 
@@ -67,8 +65,6 @@ Nhược điểm: nếu 1 trong các brick bị lỗi, dữ liệu trên brick �
 
 <img src="http://i.imgur.com/ZA6d8fO.png">
 
-*Nguồn: http://www.slideshare.net/openstackindia/glusterfs-and-openstack?related=3*
-
 **Replicated volume**: 
 
 Dữ liệu sẽ được nhân bản đến những brick còn lại.
@@ -78,8 +74,6 @@ Dữ liệu sẽ được nhân bản đến những brick còn lại.
 Nhược điểm: tốn tài nguyên hệ thống
 
 <img src="http://i.imgur.com/H9msBNH.png">
-
-*Nguồn: http://www.slideshare.net/openstackindia/glusterfs-and-openstack?related=3*
 
 **Stripe volume**: 
 
@@ -210,7 +204,7 @@ Tạo Volume "testvol4" từ các node trên:
 
 *Note: Lưu ý số lượng brick là một bội số của số lượng replicated.*
 
-#### Tạo Volume Distributed stripe 
+#### Tạo Volume Stripe Replicated 
 
 Tạo Volume Stripe Replicated từ 4 node có địa chỉ 10.145.37.90, 10.145.37.92, 10.145.37.100 và 10.145.37.102
 
@@ -224,7 +218,7 @@ Tạo Volume Stripe Replicated từ 4 node có địa chỉ 10.145.37.90, 10.145
 
 Tạo Volume "testvol5" từ các node trên:
 
-`# gluster volume create testvol5 stripe 2 transport tcp 10.145.37.90:/mnt/brick1 10.145.37.92:/mnt/brick1 10.145.37.100:/mnt/brick1 10.145.37.102:/mnt/brick1`
+`# gluster volume create testvol5 stripe 2 replica 2 transport tcp 10.145.37.90:/mnt/brick1 10.145.37.92:/mnt/brick1 10.145.37.100:/mnt/brick1 10.145.37.102:/mnt/brick1`
 
 *Note: Lưu ý số lượng brick là một bội số của số lượng stripe*
 
