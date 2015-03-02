@@ -1,6 +1,23 @@
 # GlusterFS
 
-## 1. Giới thiệu về Glusterfs
+## Mục lục
+
+[1. Giới thiệu về GlusterFS] (#Gioithieu)
+
+[2. Một số khái niệm khi sử dụng GlusterFS] (#Khainiem)
+
+[3. Các loại volume trong GlusterFS] (#Cacloai)
+
+[4. Thực hiện một số cấu hình cơ bản] (#Thuchien)
+- [4.1 Chuẩn bị] (#Chuanbi)
+- [4.2 Cài đặt và cấu hình trên các Server] (#Caidat)
+- [4.3 Một số câu lệnh khác khi sử dụng GlusterFS] (#Motsocaulenh)
+- [4.4 Cài đặt trên Client] (#CaidatCl)
+
+[Tài liệu tham khảo] (#Tailieu)
+
+<a name="Gioithieu"></a>
+## 1. Giới thiệu về GlusterFS 
 
 GlusterFS là một open source, là tập hợp file hệ thống có thể được nhân rộng tới vài peta-byte và có thể xử lý hàng ngàn Client.
 
@@ -8,7 +25,8 @@ GlusterFS có thể linh hoạt kết hợp với các thiết bị lưu trữ v
 
 Chương trình có thể lưu trữ dữ liệu trên các mô hình, thiết bị khác nhau, nó kết nối với tất cả các nút cài đặt GlusterFS qua giao thức TCP hoặc RDMA tạo ra một nguồn tài nguyên lưu trữ duy nhất kết hợp tất cả các không gian lưu trữ có sẵn thành một khối lượng lưu trữ duy nhất (distributed mode) hoặc sử dụng tối đa không gian ổ cứng có sẵn trên tất cả các ghi chú để nhân bản dữ liệu của bạn (replicated mode).
 
-## 2. Mốt số khái niệm khi sử dụng GlusterFS
+<a name="Khainiem"></a>
+## 2. Một số khái niệm khi sử dụng GlusterFS 
 
 - Brich
 <ul>
@@ -33,8 +51,9 @@ Chương trình có thể lưu trữ dữ liệu trên các mô hình, thiết b
      <img src="http://i.imgur.com/vEvm0J7.png">
 	 
 	 *Nguồn: http://www.slideshare.net/openstackindia/glusterfs-and-openstack?related=3*
-	 
-## 3. Các loại volume trong GlusterFS
+
+<a name="Cacloai"></a>	 
+## 3. Các loại volume trong GlusterFS 
 
 Khi sử dụng GlusterFS có thể tạo nhiều loại volume và mỗi loại có được những tính năng khác nhau. Dưới đây là 5 loại volume cơ bản
 
@@ -82,8 +101,10 @@ Kết hợp từ Distributed và stripe. Do đó nó có hầu hết những thu
 
 Kết hợp từ replicated và stripe
 
-## 4. Thực hiện một số cấu hình cơ bản
+<a name="Thuchien"></a>
+## 4. Thực hiện một số cấu hình cơ bản 
 
+<a name="Chuanbi"></a>
 ### 4.1 Chuẩn bị:
 
 Mô hình cho bài lab này gồm 3 server đóng vai trò như sau (mô hình có thể mở rộng cho nhiều server):
@@ -100,6 +121,7 @@ Mô hình cho bài lab này gồm 3 server đóng vai trò như sau (mô hình c
 
 Trong hệ thống GlusterFS, mỗi server được xem là 1 node trong hệ thống.
 
+<a name="Caidat"></a>
 ### 4.2 Cài đặt và cấu hình trên các Server
 
 Đầu tiên, tạo một thư mục trên 2 GlusterFS server nằm trên phân vùng khác với phân vùng / 
@@ -227,6 +249,7 @@ Brick1: 10.145.37.90:/mnt/brick1
 Brick2: 10.145.37.92:/mnt/brick1
 ```
 
+<a name="Motsocaulenh"></a>
 ### 4.3 Một số câu lệnh khác khi sử dụng GlusterFS
 
 Add 1 node vào pool:
@@ -295,6 +318,7 @@ Rebalance Volume: đồng bộ dữ liệu khi thêm, xóa brick:
 # gluster volume rebalance <volume-name> start
 ```
 
+<a name="CaidatCl"></a>
 ### 4.4 Cài đặt trên Client
 
 `# apt-get install glusterfs-client`
@@ -313,7 +337,8 @@ Mount và sử dụng:
 # rm -rf /mnt/brick1/.glusterfs
 ```
 
-## Tài liệu tham khảo
+<a name="Tailieu"></a>
+## Tài liệu tham khảo 
 
 http://congdonglinux.vn/forum/showthread.php?1282-C%C3%A0i-%C4%91%E1%BA%B7t-Store-Server-s%E1%BB%AD-d%E1%BB%A5ng-GlusterFS
 
