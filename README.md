@@ -2,6 +2,8 @@
 
 ## Mục lục
 
+[I. Hướng dẫn sử dụng GlusterFS] (#Huongdan)
+
 [1. Giới thiệu về GlusterFS] (#Gioithieu)
 
 [2. Một số khái niệm khi sử dụng GlusterFS] (#Khainiem)
@@ -14,7 +16,21 @@
 - [4.3 Một số câu lệnh khác khi sử dụng GlusterFS] (#Motsocaulenh)
 - [4.4 Cài đặt trên Client] (#CaidatCl)
 
+[II. Sử dụng GlusterFS để làm backend cho Glance trong OpenStack] (#Sudung)
+- [1. Tạo volume glusterfs trên 2 server storage] (#TaoVolume)
+- [2. Cài đặt và cấu hình trên Controller node] (#CaidatController)
+- [3. Kiểm tra hoạt động] (#KiemtrahoatdongGlance)
+
+[III. Sử dụng GlusterFS làm backend cho Cinder trong OpenStack] (#BackendChoCinder)
+- [1. Cài đặt và cấu hình trên 2 server GlusterFS] (#CaidatCinder)
+- [2. Cài đặt và cấu hình trên Controller node] (#CaidatControllerCinder)
+- [3. Cài đặt và cấu hình trên compute node] (#CaidatCompute)
+- [4. Kiểm tra hoạt động] (#Kiemtrahoatdong)
+
 [Tài liệu tham khảo] (#Tailieu)
+
+<a name="Huongdan"></a>
+## I. Hướng dẫn sử dụng GlusterFS
 
 <a name="Gioithieu"></a>
 ## 1. Giới thiệu về GlusterFS 
@@ -333,23 +349,14 @@ Mount và sử dụng:
 # rm -rf /mnt/brick1/.glusterfs
 ```
 
-<a name="Tailieu"></a>
-## Tài liệu tham khảo 
-
-http://congdonglinux.vn/forum/showthread.php?1282-C%C3%A0i-%C4%91%E1%BA%B7t-Store-Server-s%E1%BB%AD-d%E1%BB%A5ng-GlusterFS
-
-http://www.gluster.org/documentation/quickstart/
-
-http://www.slideshare.net/openstackindia/glusterfs-and-openstack?related=3
-
-http://www.slideshare.net/keithseahus/glusterfs-as-an-object-storage?related=1
-
+<a name="Sudung"></a>
 ## II. Sử dụng GlusterFS để làm backend cho Glance trong OpenStack
 
 Mô hình bài lab này như sau:
 
 <img src="http://i.imgur.com/y0Crs6W.png">
 
+<a name="TaoVolume"></a>
 #### 1. Tạo volume glusterfs "glance-volume" trên 2 server storage
 
 Trên 2 server storage, tạo Volume Distributed "glance-volume" để làm nơi lưu trữ image cho glance trong OpenStack (có thể tạo loại volume khác tương tự như Volume Distributed)
@@ -368,6 +375,7 @@ Brick1: 172.16.69.197:/glance-volume/glance1
 Brick2: 172.16.69.198:/glance-volume/glance1
 ```
 
+<a name="CaidatController"></a>
 #### 2. Cài đặt và cấu hình trên Controller node
 
 **Cài đặt GlusterFS client:**
@@ -405,7 +413,8 @@ Cuối cùng là khởi động lại dịch vụ
 # service glance-api restart
 ```
 
-**Kiểm tra hoạt động**
+<a name="KiemtrahoatdongGlance"></a>
+####3. Kiểm tra hoạt động
 
 Trên Controller node, ta sẽ tải và Upload image lên hệ thống
 
@@ -429,12 +438,14 @@ Bây giờ chúng ta có thể "launch instance" từ image ta mới upload lên
 
 `172.16.69.197:/glance-volume /mnt/glance-volume/ glusterfs defaults,_netdev 0 0`
 
-### III. Sử dụng GlusterFS làm backend cho Cinder trong OpenStack
+<a name="BackendChoCinder"></a>
+## III. Sử dụng GlusterFS làm backend cho Cinder trong OpenStack
 
 Mô hình bài lab này như sau:
 
 <img src="http://i.imgur.com/wRugJuo.png">
 
+<a name="CaidatCinder"></a>
 ####1. Cài đặt và cấu hình trên 2 server GlusterFS
 
 **Tạo volume cinder**
@@ -482,7 +493,12 @@ option rpc-auth-allow-insecure on
 
 `# service glusterfs-server restart`
 
+<a name="CaidatControllerCinder"></a>
 ####2. Cài đặt và cấu hình trên Controller node
+
+**Cài đặt GlusterFS Client**
+
+`# apt-get install glusterfs-client`
 
 **Tạo file glusterfs**
 
@@ -519,9 +535,14 @@ Khởi động lại dịch vụ cinder
 # service cinder-volume restart
 ```
 
+<a name="CaidatCompute"></a>
 ####3. Cài đặt và cấu hình trên compute node
 
 *Nếu như chỉ cấu hình trên Controller node thì mình chỉ có thể tạo volume mà không thể attach volume vào máy ảo được. Do đó, ta cần phải cấu hình thêm ở Service Nova, bằng cách khai báo thêm diver glusterfs vào file cấu hình*
+
+**Cài đặt GlusterFS Client**
+
+`# apt-get install glusterfs-client`
 
 Sửa file cấu hình của nova bằng cách thêm dòng sau vào [DEFAULT]
 
@@ -535,6 +556,7 @@ Cuối cùng là khởi động lại dịch vụ:
 
 `# service nova-compute restart`
 
+<a name="Kiemtrahoatdong"></a>
 ####4. Kiểm tra hoạt động
 
 **Tạo volume**
@@ -559,3 +581,14 @@ Kiểm tra xem volume vừa tạo có được lưu tại GlusterFS Server hay k
 `# ls -lah /var/lib/cinder/volumes/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/`					/// xxxxxxxxxxxxx: là chuỗi số khi tạo volume
 
 Tiến hành attack volume vào máy ảo trên openstack
+
+<a name="Tailieu"></a>
+## Tài liệu tham khảo 
+
+http://congdonglinux.vn/forum/showthread.php?1282-C%C3%A0i-%C4%91%E1%BA%B7t-Store-Server-s%E1%BB%AD-d%E1%BB%A5ng-GlusterFS
+
+http://www.gluster.org/documentation/quickstart/
+
+http://www.slideshare.net/openstackindia/glusterfs-and-openstack?related=3
+
+http://www.slideshare.net/keithseahus/glusterfs-as-an-object-storage?related=1
