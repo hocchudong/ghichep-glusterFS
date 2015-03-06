@@ -422,3 +422,140 @@ Kiểm tra xem images đã được lưu vào thư mục mới tạo chưa
 ```
 # ls /mnt/glance-volume/glance/images/
 ```
+
+Bây giờ chúng ta có thể "launch instance" từ image ta mới upload lên hệ thống.
+
+*Lưu ý: Vì image lưu ở trên 2 server storage nên khi ta umount hoặc restart lại hệ thống thì sẽ không "launch instance" được nữa. Để tránh khi restart lại, hệ thống sẽ tự động umount, ta cần khai báo trong file "fstab" dòng sau:*
+
+`172.16.69.197:/glance-volume /mnt/glance-volume/ glusterfs defaults,_netdev 0 0`
+
+### III. Sử dụng GlusterFS làm backend cho Cinder trong OpenStack
+
+Mô hình bài lab này như sau:
+
+<img src="http://i.imgur.com/wRugJuo.png">
+
+####1. Cài đặt và cấu hình trên 2 server GlusterFS
+
+**Tạo volume cinder**
+
+Đầu tiên, trên 2 server GlusterFS ta sẽ tạo volume "cinder-volume"
+
+```
+Volume Name: cinder-volume
+Type: Distribute
+Volume ID: 89687dba-5cde-4808-921f-f8ecbedc26b5
+Status: Started
+Number of Bricks: 2
+Transport-type: tcp
+Bricks:
+Brick1: 172.16.69.197:/cinder-volume/cinder1
+Brick2: 172.16.69.198:/cinder-volume/cinder1
+```
+
+**Thiết lập uid và gid cho cinder-volume**
+
+Trên Controller node, xem uid và gid của cinder
+
+```
+# vi /etc/passwd
+cinder:x:115:122::/var/lib/cinder:/bin/false
+```
+
+Thiết lập để GlusterFS volume sử dụng uid và gid giống như user cinder
+
+```
+# gluster vol set cinder-volume storage.owner-uid 115
+# gluster vol set cinder-volume storage.owner-gid 122`
+```
+
+**Sửa file cấu hình GlusterFS**
+
+Khai báo thêm dòng sau trong file "glusterd.vol"
+
+```
+# vi /etc/glusterfs/glusterd.vol
+option rpc-auth-allow-insecure on
+```
+
+**Khởi động lại glusterfs**
+
+`# service glusterfs-server restart`
+
+####2. Cài đặt và cấu hình trên Controller node
+
+**Tạo file glusterfs**
+
+Đầu tiên, tạo file /etc/cinder/glusterfs khai báo địa chỉ của volume "cinder-volume":
+
+```
+# vi /etc/cinder/glusterfs
+172.16.69.197:/cinder-volume
+```
+
+Phân quyền cho file vừa tạo:
+
+```
+# chown root:cinder /etc/cinder/glusterfs
+# chmod 0640 /etc/cinder/glusterfs
+```
+
+Tiếp đến, sửa file cấu hình của cinder bằng cách thêm các dòng sau vào [DEFAULT]
+
+```
+# vi /etc/cinder/cinder.conf
+
+volume_driver=cinder.volume.drivers.glusterfs.GlusterfsDriver
+volume_backend_name=GlusterFS
+glusterfs_shares_config=/etc/cinder/glusterfs									/// Đường dẫn file glusterfs vừa tạo ở bước trên
+glusterfs_mount_point_base=/var/lib/cinder/volumes								/// Giống với volumes_dir = /var/lib/cinder/volumes
+glusterfs_sparsed_volumes=true
+```
+
+Khởi động lại dịch vụ cinder
+
+```
+# service cinder-api restart
+# service cinder-volume restart
+```
+
+####3. Cài đặt và cấu hình trên compute node**
+
+*Nếu như chỉ cấu hình trên Controller node thì mình chỉ có thể tạo volume mà không thể attach volume vào máy ảo được. Do đó, ta cần phải cấu hình thêm ở Service Nova, bằng cách khai báo thêm diver glusterfs vào file cấu hình*
+
+Sửa file cấu hình của nova bằng cách thêm dòng sau vào [DEFAULT]
+
+```
+# vi /etc/nova/nova.conf
+
+volume_drivers="glusterfs=nova.virt.libvirt.volume.LibvirtGlusterfsVolumeDriver"
+```
+
+Cuối cùng là khởi động lại dịch vụ:
+
+`# service nova-compute restart`
+
+4. Kiểm tra hoạt động
+
+**Tạo volume**
+
+Đầu tiên ta sẽ tạo 1 volume và kiểm tra xem volume đó có phải là do GlusterFS cung cấp hay không
+
+```
+# cinder type-create glusterfs
+# cinder type-list
+
+# cinder type-key glusterfs set volume_backend_name=GlusterFS 
+# cinder extra-specs-list
+
+# cinder create --display_name disk_glusterfs --volume-type glusterfs 3
+# cinder list 
+```
+
+**Kiểm tra cinder-volume**
+
+Kiểm tra xem volume vừa tạo có được lưu tại GlusterFS Server hay không
+
+`# ls -lah /var/lib/cinder/volumes/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/`					/// xxxxxxxxxxxxx: là chuỗi số khi tạo volume
+
+Tiến hành attack volume vào máy ảo trên openstack
