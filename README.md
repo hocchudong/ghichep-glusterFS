@@ -83,6 +83,8 @@ Dữ liệu chia thành những phần khác nhau và lưu trữ ở những bri
 
 Nhược điểm: 1 brick bị lỗi volume không thể hoạt động được.
 
+<img src="http://i.imgur.com/nPInYen.png">
+
 **Distributed replicated**: 
 
 Kết hợp từ distributed và replicated 
