@@ -466,7 +466,7 @@ Thiết lập để GlusterFS volume sử dụng uid và gid giống như user c
 
 ```
 # gluster vol set cinder-volume storage.owner-uid 115
-# gluster vol set cinder-volume storage.owner-gid 122`
+# gluster vol set cinder-volume storage.owner-gid 122
 ```
 
 **Sửa file cấu hình GlusterFS**
@@ -519,7 +519,7 @@ Khởi động lại dịch vụ cinder
 # service cinder-volume restart
 ```
 
-####3. Cài đặt và cấu hình trên compute node**
+####3. Cài đặt và cấu hình trên compute node
 
 *Nếu như chỉ cấu hình trên Controller node thì mình chỉ có thể tạo volume mà không thể attach volume vào máy ảo được. Do đó, ta cần phải cấu hình thêm ở Service Nova, bằng cách khai báo thêm diver glusterfs vào file cấu hình*
 
@@ -535,7 +535,7 @@ Cuối cùng là khởi động lại dịch vụ:
 
 `# service nova-compute restart`
 
-4. Kiểm tra hoạt động
+####4. Kiểm tra hoạt động
 
 **Tạo volume**
 
