@@ -344,7 +344,7 @@ http://www.slideshare.net/keithseahus/glusterfs-as-an-object-storage?related=1
 
 ## Sử dụng GlusterFS để làm backend cho Glance trong OpenStack
 
-### Tạo volume glusterfs "glance-volume" trên 2 con storage
+### Tạo volume glusterfs "glance-volume" trên 2 máy storage
 
 ### Mount Gluster
 
