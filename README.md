@@ -344,149 +344,81 @@ http://www.slideshare.net/openstackindia/glusterfs-and-openstack?related=3
 
 http://www.slideshare.net/keithseahus/glusterfs-as-an-object-storage?related=1
 
-## Sử dụng GlusterFS để làm backend cho Glance trong OpenStack
+## II. Sử dụng GlusterFS để làm backend cho Glance trong OpenStack
 
-### Tạo volume glusterfs "glance-volume" trên 2 máy storage
+Mô hình bài lab này như sau:
 
-### Mount Gluster
+<img src="http://i.imgur.com/y0Crs6W.png">
+
+#### 1. Tạo volume glusterfs "glance-volume" trên 2 server storage
+
+Trên 2 server storage, tạo Volume Distributed "glance-volume" để làm nơi lưu trữ image cho glance trong OpenStack (có thể tạo loại volume khác tương tự như Volume Distributed)
+
+Các bước tạo volume các bạn có thể tham khảo ở phần trên. Ở bài lab này, mình đã tạo "glance-volume"
+
+```
+Volume Name: glance-volume
+Type: Distribute
+Volume ID: 7bb6461c-24b1-4f23-990a-91e97b34bd9e
+Status: Started
+Number of Bricks: 2
+Transport-type: tcp
+Bricks:
+Brick1: 172.16.69.197:/glance-volume/glance1
+Brick2: 172.16.69.198:/glance-volume/glance1
+```
+
+#### 2. Cài đặt và cấu hình trên Controller node
+
+**Cài đặt GlusterFS client:**
+
+`# apt-get install glusterfs-client`
+
+Tạo thư mục "glance-volume" và mount volume "glance-volume" vào thư mục đó:
 
 ```
 # mkdir -p /mnt/glance-volume				
 # mount -t glusterfs 172.16.69.197:/glance-volume /mnt/glance-volume/
-# df -h 
-```																//Kiem tra
+# df -h 																		//Kiem tra
+```																
 
-### Configure Glance
+**Configure Glance Service**
 
+Đầu tiên, tạo thư mục làm nơi lưu trữ images
+
+```
 # mkdir -p /mnt/glance-volume/glance/images/  							/// Tạo thư mục lưu trữ images
-
 # chown -R glance:glance /mnt/glance-volume/glance/						/// Cấp quyền sử dụng cho user glance
+```
 
+Chỉnh sửa file cấu hình của Glance
+
+```
 # vi /etc/glance/glance-api.conf
 filesystem_store_datadir = /mnt/glance-volume/glance/images/			/// Sửa nơi lưu image thành đường dẫn storage mới tạo
+```
 
+Cuối cùng là khởi động lại dịch vụ
+
+```
 # service glance-registry restart										
 # service glance-api restart
+```
 
-### Test
+**Kiểm tra hoạt động**
 
-Upload image:
+Trên Controller node, ta sẽ tải và Upload image lên hệ thống
 
+```
 # glance image-list
 # mkdir /tmp/images
 # wget -P /tmp/images http://cdn.download.cirros-cloud.net/0.3.3/cirros-0.3.3-x86_64-disk.img
 # glance image-create --name "cirros-0.3.3-x86_64" --file /tmp/images/cirros-0.3.3-x86_64-disk.img --disk-format qcow2 --container-format bare --is-public True --progress
 # glance image-list
+```
 
 Kiểm tra xem images đã được lưu vào thư mục mới tạo chưa
 
+```
 # ls /mnt/glance-volume/glance/images/
-
-### Sử dụng GlusterFS làm backend cho Cinder trong OpenStack
-
-### Tạo volume cinder
-
 ```
-Volume Name: cinder-volume
-Type: Distribute
-Volume ID: 89687dba-5cde-4808-921f-f8ecbedc26b5
-Status: Started
-Number of Bricks: 2
-Transport-type: tcp
-Bricks:
-Brick1: 172.16.69.197:/cinder-volume/cinder1
-Brick2: 172.16.69.198:/cinder-volume/cinder1
-
-```
-### Thiết lập để cho phép cinder-volume được làm backend cho cinder
-
-*Trên Controller node, xem uid và gid của cinder*
-
-```
-# vi /etc/passwd
-cinder:x:115:122::/var/lib/cinder:/bin/false
-```
-
-`# gluster vol set cinder-volume storage.owner-uid 115`
-
-`# gluster vol set cinder-volume storage.owner-gid 122`
-
-*Trên server GlusterFS thêm dòng sau vào file cấu hình gluster*
-
-```
-# vi /etc/glusterfs/glusterd.vol
-option rpc-auth-allow-insecure on
-```
-
-Khởi động lại glusterfs
-
-`# service glusterfs-server restart`
-
-### Cài đặt và cấu hình trên Controller node
-
-Tạo file /etc/cinder/glusterfs:
-
-```# vi /etc/cinder/glusterfs
-172.16.69.197:/cinder-volume
-```
-
-Phân quyền cho file vừa tạo:
-
-```
-# chown root:cinder /etc/cinder/glusterfs
-# chmod 0640 /etc/cinder/glusterfs
-```
-
-Sửa file cấu hình của cinder
-
-Thêm các dòng sau vào defaults
-
-```
-# vi /etc/cinder/cinder.conf
-
-volume_driver=cinder.volume.drivers.glusterfs.GlusterfsDriver
-volume_backend_name=GlusterFS
-glusterfs_shares_config=/etc/cinder/glusterfs
-glusterfs_mount_point_base=/var/lib/cinder/volumes								/// Giống với volumes_dir = /var/lib/cinder/volumes
-glusterfs_sparsed_volumes=true
-```
-
-Khởi động lại dịch vụ cinder
-
-```
-# service cinder-api restart
-# service cinder-volume restart
-```
-
-### Cấu hình trên compute node
-
-Thêm vào [DEFAULT]
-
-```
-# vi /etc/nova/nova.conf
-
-volume_drivers="glusterfs=nova.virt.libvirt.volume.LibvirtGlusterfsVolumeDriver"
-```
-
-`# service nova-compute restart`
-
-### Kiểm tra cấu hình
-
-Tạo volume
-
-```
-# cinder type-create glusterfs
-# cinder type-list
-
-# cinder type-key glusterfs set volume_backend_name=GlusterFS 
-# cinder extra-specs-list
-
-# cinder create --display_name disk_glusterfs --volume-type glusterfs 3
-# cinder list 
-```
-
-Kiểm tra cinder-volume
-
-`# ls -lah /var/lib/cinder/volumes/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/`					/// xxxxxxxxxxxxx: là chuỗi số khi tạo volume
-
-Tiến hành attack volume vào máy ảo trên openstack
