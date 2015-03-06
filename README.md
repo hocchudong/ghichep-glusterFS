@@ -356,38 +356,29 @@ http://www.slideshare.net/keithseahus/glusterfs-as-an-object-storage?related=1
 
 ### Configure Glance
 
-```
 # mkdir -p /mnt/glance-volume/glance/images/  							/// Tạo thư mục lưu trữ images
-# chown -R glance:glance /mnt/glance-volume/glance/						/// Cấp quyền sử dụng cho user glance
-```
 
-```
+# chown -R glance:glance /mnt/glance-volume/glance/						/// Cấp quyền sử dụng cho user glance
+
 # vi /etc/glance/glance-api.conf
 filesystem_store_datadir = /mnt/glance-volume/glance/images/			/// Sửa nơi lưu image thành đường dẫn storage mới tạo
-```
 
-```
 # service glance-registry restart										
 # service glance-api restart
-```
 
 ### Test
 
 Upload image:
 
-```
 # glance image-list
 # mkdir /tmp/images
 # wget -P /tmp/images http://cdn.download.cirros-cloud.net/0.3.3/cirros-0.3.3-x86_64-disk.img
 # glance image-create --name "cirros-0.3.3-x86_64" --file /tmp/images/cirros-0.3.3-x86_64-disk.img --disk-format qcow2 --container-format bare --is-public True --progress
 # glance image-list
-```
 
 Kiểm tra xem images đã được lưu vào thư mục mới tạo chưa
 
-```
 # ls /mnt/glance-volume/glance/images/
-```
 
 ### Sử dụng GlusterFS làm backend cho Cinder trong OpenStack
 
