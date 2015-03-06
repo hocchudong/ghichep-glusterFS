@@ -103,7 +103,7 @@ Kết hợp từ replicated và stripe
 <a name="Chuanbi"></a>
 ### 4.1 Chuẩn bị:
 
-Mô hình cho bài lab này gồm 3 server đóng vai trò như sau (mô hình có thể mở rộng cho nhiều server):
+Mô hình cho bài lab này gồm nhiều server đóng vai trò như sau (mô hình có thể mở rộng cho nhiều server):
 
 10.145.37.90  Server1
 
