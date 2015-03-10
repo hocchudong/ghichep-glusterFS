@@ -594,9 +594,8 @@ http://www.slideshare.net/openstackindia/glusterfs-and-openstack?related=3
 http://www.slideshare.net/keithseahus/glusterfs-as-an-object-storage?related=1
 
 Một số giải pháp được xây dựng dựa trên GlusterFS:
-<li>Media serving (CDN): Là hệ thống lưu trữ dữ liệu bao gồm các ứng dụng web, file tải xuống (âm thanh, hình ảnh, phần mềm, tài liệu,…), truyền tải thời gian thực.</li>
-
-<li>Large scale file storage: Hệ thống lưu trữ file quy mô lớn</li>
+- Media serving (CDN): Là hệ thống lưu trữ dữ liệu bao gồm các ứng dụng web, file tải xuống (âm thanh, hình ảnh, phần mềm, tài liệu,…), truyền tải thời gian thực.
+- Large scale file storage: Hệ thống lưu trữ file quy mô lớn.
 
 <li>File sharing: Hệ thống chia sẻ file</li>
 
