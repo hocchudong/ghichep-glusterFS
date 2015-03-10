@@ -592,3 +592,15 @@ http://www.gluster.org/documentation/quickstart/
 http://www.slideshare.net/openstackindia/glusterfs-and-openstack?related=3
 
 http://www.slideshare.net/keithseahus/glusterfs-as-an-object-storage?related=1
+
+<li>Media serving (CDN): Là hệ thống lưu trữ dữ liệu bao gồm các ứng dụng web, file tải xuống (âm thanh, hình ảnh, phần mềm, tài liệu,…), truyền tải thời gian thực.*CDN (Content Delivery Network) là một hệ thống nhiều máy tính (máy chủ) chứa những bản sao về nội dung, những máy chủ này được đặt ở nhiều nơi trong một mạng lưới và tối đa hóa băng thông cho việc truy cập dữ liệu. Một người dùng truy cập vào bản sao nội dung được chứa trên máy chủ gần với người dùng nhất sẽ làm giảm tình trạng “thắt cổ chai” so với việc tất cả người dùng cùng truy cập vào một máy chủ trung tâm.*</li>
+
+<li>Large scale file storage: Hệ thống lưu trữ file quy mô lớn</li>
+
+<li>File sharing: Hệ thống chia sẻ file</li>
+
+<li>High Performance Computing (HPC) storage: Cung cấp hệ thống lưu trữ hiệu năng cao</li>
+
+<li>IaaS storage layer: Cung cấp storage như 1 dịch vụ (hdd, ssd ảo...)</li>
+
+<li>Được sử dụng để làm backend cho Glance, Cinder, Swift trong OpenStack</li>
