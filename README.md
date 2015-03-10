@@ -593,14 +593,10 @@ http://www.slideshare.net/openstackindia/glusterfs-and-openstack?related=3
 
 http://www.slideshare.net/keithseahus/glusterfs-as-an-object-storage?related=1
 
-Một số giải pháp được xây dựng dựa trên GlusterFS:
-- Media serving (CDN): Là hệ thống lưu trữ dữ liệu bao gồm các ứng dụng web, file tải xuống (âm thanh, hình ảnh, phần mềm, tài liệu,…), truyền tải thời gian thực.
-- Large scale file storage: Hệ thống lưu trữ file quy mô lớn.
+http://www.server-world.info/en/note?os=CentOS_6&p=openstack_icehouse2&f=2
 
-<li>File sharing: Hệ thống chia sẻ file</li>
+http://www.gluster.org/community/documentation/index.php/GlusterFS_Glance
 
-<li>High Performance Computing (HPC) storage: Cung cấp hệ thống lưu trữ hiệu năng cao</li>
+http://docs.openstack.org/admin-guide-cloud/content/glusterfs_backend.html
 
-<li>IaaS storage layer: Cung cấp storage như 1 dịch vụ (hdd, ssd ảo...)</li>
 
-<li>Được sử dụng để làm backend cho Glance, Cinder, Swift trong OpenStack</li>
