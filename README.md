@@ -105,13 +105,19 @@ Nhược điểm: 1 brick bị lỗi volume không thể hoạt động được
 
 Kết hợp từ distributed và replicated 
 
+<img src="http://i.imgur.com/bEOtgS7.png">
+
 **Distributed stripe volume**: 
 
 Kết hợp từ Distributed và stripe. Do đó nó có hầu hết những thuộc tính hai loại trên và khi 1 node và 1 brick delete đồng nghĩa volume cũng không thể hoạt động được nữa.
 
+<img src="http://i.imgur.com/vR6F7a2.png">
+
 **Replicated stripe volume**
 
 Kết hợp từ replicated và stripe
+
+<img src="http://i.imgur.com/nRijuJy.png">
 
 <a name="Thuchien"></a>
 ## 4. Thực hiện một số cấu hình cơ bản 
