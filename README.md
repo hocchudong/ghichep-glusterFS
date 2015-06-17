@@ -148,6 +148,10 @@ Kết hợp từ replicated và stripe
 <a name="Chuanbi"></a>
 ### 4.1 Chuẩn bị:
 
+Mô hình bài Lab này như sau:
+
+<img src="http://i.imgur.com/VL2hOzU.png">
+
 Mô hình cho bài lab này gồm nhiều server đóng vai trò như sau (mô hình có thể mở rộng cho nhiều server):
 
 10.145.37.90  Server1
@@ -203,7 +207,7 @@ Xem status của pool
 ```
 # gluster peer status 
 Number of Peers: 1
-Hostname: 10.10.10.198
+Hostname: 10.145.37.92
 Port: 24007
 Uuid: 40221832-c1a4-4a5b-ae12-8e8ddc1682d3
 State: Peer in Cluster (Connected)
