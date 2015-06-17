@@ -1,1 +1,1 @@
- ### Sử dụng một số tính năng của GlusterFS
+ ## Sử dụng một số tính năng của GlusterFS
