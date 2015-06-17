@@ -347,7 +347,7 @@ Tương tự Remove brick ra khỏi volume:
 
 `# gluster volume remove-brick <volume-name> <server:/data>` 
 
-Migrate volume: chuyển dữ liệu từ brick này đến brick khác:
+Migrate volume: chuyển dữ liệu từ 1 brick trong Pool đến đến brick khác nằm ngoài Pool:
 
 ```
 # gluster volume replace-brick <volume-name> <server1:/data1> <server2:/data2> start // bắt đầu chuyển dữ liệu từ brick data1 đến data2
