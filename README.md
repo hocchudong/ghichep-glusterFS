@@ -84,9 +84,13 @@ Tại hình trên, chúng ta có thể thấy mỗi Node1, Node2, Node3 đã t�
 
 Khi sử dụng GlusterFS có thể tạo nhiều loại volume và mỗi loại có được những tính năng khác nhau. Dưới đây là 5 loại volume cơ bản
 
-**Distributed volume**: 
+**Distributed volume**:
+
+Distributed Volume có những đặc điểm cơ bản sau:
 
 Dữ liệu được lưu trữ phân tán trên từng bricks, file1 nằm trong brick 1, file 2 nằm trong brick 2,... 
+
+Vì metadata được lưu trữ trực tiếp trên từng bricks nên không cần thiết phải có một metadata server ở bên ngoài, giúp cho các tổ chức tiết kiệm được tài nguyên.
 
 Ưu điểm: mở rộng được dung lượng store ( dung lượng store bằng tổng dung lượng các brick)
 
@@ -96,7 +100,11 @@ Nhược điểm: nếu 1 trong các brick bị lỗi, dữ liệu trên brick �
 
 **Replicated volume**: 
 
-Dữ liệu sẽ được nhân bản đến những brick còn lại.
+Dữ liệu sẽ được nhân bản đến những brick còn lại, trên tất cả các node và đồng bộ tất cả các nhân bản mới cập nhật.
+
+Đảm bảo tính nhất quán.
+
+Không giới hạn số lượng replicas.
 
 Ưu điểm: phù hợp với hệ thống yêu cầu tính sẵn sàng cao và dự phòng
 
@@ -119,6 +127,8 @@ Nhược điểm: 1 brick bị lỗi volume không thể hoạt động được
 Kết hợp từ distributed và replicated 
 
 <img src="http://i.imgur.com/bEOtgS7.png">
+
+Với mô hình trên, hệ thống sẽ yêu cầu cần tối thiểu 3 node, vừa có thể mở rộng được dung lượng lưu trữ, vừa tăng tính dự phòng cho hệ thống. Tuy nhiên, nếu đồng thời bị lỗi 2 node server1 và server2 hoặc 2 node server3 và server4 thì hệ thống sẽ không hoạt động được.
 
 **Distributed stripe volume**: 
 
