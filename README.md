@@ -44,27 +44,40 @@ Chương trình có thể lưu trữ dữ liệu trên các mô hình, thiết b
 <a name="Khainiem"></a>
 ## 2. Một số khái niệm khi sử dụng GlusterFS 
 
+Để có thể hiểu rõ về GlusterFS và ứng dụng được sản phẩm này, trước hết ta cần phải biết rõ những khái niệm có trong GlusterFS. Sau đây là những khái niệm quan trọng khi sử dụng Glusterfs
+
+- Trusted Storage Pool
+<ul>
+Trong một hệ thống GlusterFS, những server dùng để lưu trữ được gọi là những node, và những node này kết hợp lại với nhau thành một không gian lưu trữ lớn được gọi là Pool.
+Dưới đây là mô hình kết nối giữa 2 node thành một Trusted Storage Pool.
+</ul>
+
+<img src="http://i.imgur.com/WuxBSnZ.png">
+
 - Brick
 <ul>
+Từ những phần vùng lưu trữ mới (những phân vùng chưa dùng đến) trên mỗi node, chúng ta có thể tạo ra những brick.
 <li>Brick được định nghĩa bởi 1 server (name or IP) và 1 đường dẫn. Vd: 10.10.10.20:/mnt/brick (đã mount 1 partition (/dev/sdb1) vào /mnt)</li>
 <li>Mỗi brick có dung lượng bị giới hạn bởi filesystem....</li>
 <li>Trong mô hình lý tưởng, mỗi brick thuộc cluster có dung lượng bằng nhau.</li>
+Để có thể hiểu rõ hơn về Bricks, chúng ta có thể tham khảo hình dưới đây:
+
+<img src="http://i.imgur.com/vEvm0J7.png">
 </ul>
 
 - Volume 
 <ul>
+Từ những brick trên các node thuộc cùng một Pool, kết hợp những brick đó lại thành một không gian lưu trữ lớn và thống nhất để client có thể mount đến và sử dụng. 
 <li>Một volume là tập hợp logic của các brick</li>
 <li>Tên volume được chỉ định bởi administrator</li>
 <li>Volume được mount bởi client: mount -t glusterfs server1:/<volname> /my/mnt/point</li>
 <li>Một volume có thể chứa các brick từ các node khác nhau.</li>
-</ul>
+Sau đây là mô hình tập hợp những Brick thành Volume:
 
-- Node
-<ul>
-<li>Mỗi 1 Server đóng vai trò là 1 node trong GlusterFS</li>
-</ul>
+<img src="http://i.imgur.com/SgolVTq.png">
 
-     <img src="http://i.imgur.com/vEvm0J7.png">
+Tại hình trên, chúng ta có thể thấy mỗi Node1, Node2, Node3 đã tạo 2 brick là /export/brick1 và /export/brick2, và từ 3 brick /export/brick1trên 3 Node tập hợp lại tạo thành volume music. Tương tự 3 brick /export/brick2 trên 3 Node tập hợp lại tạo thành volume Videos.
+</ul>
 	 
 <a name="Cacloai"></a>	 
 ## 3. Các loại volume trong GlusterFS 
