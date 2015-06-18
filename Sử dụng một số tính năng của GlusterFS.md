@@ -108,7 +108,7 @@ Brick1: 10.10.10.198:/gluster1/vdb1/brick-198
 
 Tại bài lab này, Node Gluster01 sẽ đóng vai trò là Master còn node Gluster02 là Slave. Dữ liệu từ Master sẽ được sao chép sang Slave
 
-**B1: Tạo phiên kết nối SSH **
+**B1: Tạo phiên kết nối SSH**
 
 Tạo kết nối SSH từ Master đến node Slave
 
