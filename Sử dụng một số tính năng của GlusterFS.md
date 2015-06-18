@@ -57,7 +57,7 @@ Trong mô hình dưới đây, ta có fvm1, fvm2, fvm3, fvm4, là những nodes 
 
 <img src="http://i.imgur.com/vyRaiOe.png">
 
-Khi chạy câu lệnh `gluster system::execute gsec_create` trên bất kỳ node nào của Volume Master,Master Volume sẽ tạo key SSH tại `/var/lib/glusterd/geo-replication/secret.pem` cho mỗi node tại Master Volume. `
+Khi chạy câu lệnh `gluster system::execute gsec_create` trên bất kỳ node nào của Volume Master,Master Volume sẽ tạo key SSH tại `/var/lib/glusterd/geo-replication/secret.pem` cho mỗi node tại Master Volume. Tất cả public keys của Master nodes được copy tới node khởi tạo phiên kết nối và add vào file common_secret.pem.pub
 
 <img src="http://i.imgur.com/yiuv3IF.png">
 
