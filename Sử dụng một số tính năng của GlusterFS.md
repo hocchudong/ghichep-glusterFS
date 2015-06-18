@@ -49,6 +49,29 @@ Bây giờ, ta sẽ add thêm Brick mới vào Volume:
 
 Với tính năng Geo-replication, ta có thể sao chép dữ liệu từ một Volume này sang một Volume khác nằm ở một vị trí địa lý khác.
 
+Với tính năng Geo-replication, ta có thể sao chép dữ liệu từ một Volume này sang một Volume khác nằm ở một vị trí địa lý khác.
+
+Cơ chế hoạt động như sau:
+
+Trong mô hình dưới đây, ta có fvm1, fvm2, fvm3, fvm4, là những nodes của Volume gvm đóng vai trò là Master, fvm5, fvm6, fvm8 là những nodes của Volume gvs, đóng vai trò là Slave.
+
+<img src="http://i.imgur.com/vyRaiOe.png">
+
+Khi chạy câu lệnh `gluster system::execute gsec_create` trên bất kỳ node nào của Volume Master,Master Volume sẽ tạo key SSH tại `/var/lib/glusterd/geo-replication/secret.pem` cho mỗi node tại Master Volume. `
+
+<img src="http://i.imgur.com/yiuv3IF.png">
+
+Khi chạy lệnh tạo phiên geo-replication, Master Volume sẽ kiểm tra kết nối SSH đến Slave Volume đã mở hay chưa, 
+
+<img src="http://i.imgur.com/71VrJxK.png">
+
+Khi đã có kết nối SSH giữa 2 Volume, tiếp đến sẽ kiểm tra phiên bản Gluster, kích thước giữa 2 Volume
+
+<img src="http://i.imgur.com/BrvIKAw.png">
+
+Sau khi hoàn thành các bước kiểm tra, Master Volume sẽ copy file `common_secret pub` tới 1 nodes của Slave Volume, phân phối tới các node còn lại và add authorized_keys tới mỗi nodes tại Slave Volume
+Kết thúc việc khởi tạo phiên geo-replication, bây giờ ta có thể bắt đầu phiên geo-replication để sao chép dữ liệu.
+
 **Các bước thực hiện:**
 
 Tạo 2 volume tại 2 vị trí khác nhau (khác pool) 2 volume phải cùng loại và cùng kích thước
