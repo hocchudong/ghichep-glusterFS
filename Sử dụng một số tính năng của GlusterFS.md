@@ -45,3 +45,132 @@ Bây giờ, ta sẽ add thêm Brick mới vào Volume:
 # gluster volume add-brick testvol rep 2 172.16.69.199:/gluster3/vdb1/brick1    ///add thêm brick từ node .199 vào volume
 ```
 
+#### Geo-replication
+
+Với tính năng Geo-replication, ta có thể sao chép dữ liệu từ một Volume này sang một Volume khác nằm ở một vị trí địa lý khác.
+
+**Các bước thực hiện:**
+
+Tạo 2 volume tại 2 vị trí khác nhau (khác pool) 2 volume phải cùng loại và cùng kích thước
+
+Tại Node Gluster01 tạo volume như sau:
+
+```
+root@Gluster01:/gluster1/vdb1/brick-197# gluster vol in
+
+Volume Name: geo-rep
+Type: Distribute
+Volume ID: 74715e39-7b98-4ee1-88db-448928a19aaf
+Status: Started
+Number of Bricks: 1
+Transport-type: tcp
+Bricks:
+Brick1: 10.10.10.197:/gluster1/vdb1/brick-197
+```
+
+Tại Node Gluster02 tạo volume như sau:
+
+```
+root@Gluster02:/gluster1/vdb1/brick-198# gluster vol in
+
+Volume Name: geo-rep2
+Type: Distribute
+Volume ID: 70d3bb23-d3af-4359-8d93-1376eac438d7
+Status: Started
+Number of Bricks: 1
+Transport-type: tcp
+Bricks:
+Brick1: 10.10.10.198:/gluster1/vdb1/brick-198
+```
+
+Tại bài lab này, Node Gluster01 sẽ đóng vai trò là Master còn node Gluster02 là Slave. Dữ liệu từ Master sẽ được sao chép sang Slave
+
+**B1: Tạo phiên kết nối SSH **
+
+Tạo kết nối SSH từ Master đến node Slave
+
+Trên Node Gluster01
+
+Tạo key
+
+```
+root@Gluster01:~# ssh-keygen -t rsa
+
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa): [Press enter key]
+Created directory '/root/.ssh'.
+Enter passphrase (empty for no passphrase): [Press enter key]
+Enter same passphrase again: [Press enter key]
+Your identification has been saved in /root/.ssh/id_rsa.
+Your public key has been saved in /root/.ssh/id_rsa.pub.
+```
+
+*Chú ý: khi tạo key, ta sẽ để lưu vào đường dẫn mặc định và không đặt passphrase*
+
+Kết nối đến Gluster02 và tạo thư mục .ssh
+
+```
+root@Gluster01:~# ssh root@Gluster02 mkdir -p .ssh
+```
+
+Từ Node Gluster01, gửi key sang Gluster02 và lưu vào file Authorized
+
+```
+root@Gluster01:~# cat .ssh/id_rsa.pub | ssh root@Gluster02 'cat >> .ssh/authorized_keys'
+
+root@Gluster02's password: [Enter Your Password Here]
+```
+
+Phân quyền cho các thư mục ssh tại Node Gluster02
+
+```
+root@Gluster01:~# ssh root@Gluster02 "chmod 700 .ssh; chmod 640 .ssh/authorized_keys"
+
+root@Gluster02's password: [Enter Your Password Here]
+```
+
+Test SSH từ Node Gluster01 đến Gluster02
+
+`root@Gluster01:~# ssh sheena@192.168.0.11`
+
+Nếu không cần nhập pass thì bước tạo kết nối SSH thành công, exit và thực hiện các bước tiếp theo.
+
+Có thể tham khảo thêm bước này tại đây: http://www.tecmint.com/ssh-passwordless-login-using-ssh-keygen-in-5-easy-steps/
+
+**B2: Đồng bộ thời gian giữa 2 node (có thể cài NTP)**
+
+**B3: Tạo phiên geo-replication**
+
+`# gluster system:: execute gsec_create`
+
+`# gluster volume geo-replication MASTER_VOL SLAVE_HOST::SLAVE_VOL create push-pem [force]`
+
+ví dụ:
+
+```
+# gluster system:: execute gsec_create
+# gluster vol geo-replication geo-rep gluster02::geo-rep2 create push-pem
+```
+
+Kiểm tra phiên geo-replication
+
+`# gluster vol geo-replication geo-rep gluster02::geo-rep2 status`
+
+Copy các flie cấu hình tại thư mục mặc định của Ubuntu sang thư mục đã khai báo 
+
+```
+# cd /usr/
+# mkdir libexec
+# cd libexec/
+# cp -R /usr/lib/x86_64-linux-gnu/glusterfs/ .
+```
+
+Bắt đầu phiên geo-replication
+
+```
+#gluster vol geo-replication geo-rep gluster02::geo-rep2 start
+#gluster vol geo-replication geo-rep gluster02::geo-rep2 status
+```
+
+#### Khôi phục dữ liệu:
+(Sử dụng rsync)
