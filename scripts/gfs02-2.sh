@@ -13,8 +13,8 @@ sleep 3
 mkdir -p /glusterfs/replica
 
 echocolor "Search the server"
+gluster peer probe $HOST_GFS01
 sleep 3
-gluster peer probe gfs01 
 
 echocolor "show status"
 sleep 3
