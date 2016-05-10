@@ -1,0 +1,19 @@
+## Thực hiện trên cả 2 node
+
+apt-get update -y
+apt-get install git -y
+
+git clone https://github.com/hocchudong/ghichep-glusterFS.git
+
+mv ghichep-glusterFS/scripts/ /root/
+rm -rf ghichep-glusterFS/
+cd scripts/
+chmod +x *.sh 
+
+## Thực hiện trên GlusterFS 01
+bash gfs01.sh
+
+
+## Thực hiện trên GlusterFS 02
+bash gfs02.sh
+

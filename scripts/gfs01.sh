@@ -10,7 +10,7 @@
 # 
 
 source config.cfg
-# source functions.sh
+source functions.sh
 
 ifaces=/etc/network/interfaces
 test -f $ifaces.orig || cp $ifaces $ifaces.orig
