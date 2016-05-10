@@ -48,7 +48,8 @@ EOF
 
 sleep 5
 echocolor "Install GLUSTERFS02"
-aptitude -y install glusterfs-server
+apt-get -y update
+apt-get -y install glusterfs-server
 
 echocolor "Create folder"
 sleep 3
