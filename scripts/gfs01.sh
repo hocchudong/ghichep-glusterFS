@@ -1,5 +1,14 @@
 #!/bin/bash -ex
 
+# apt-get update -y
+#  apt-get install git -y
+#  git clone https://github.com/hocchudong/ghichep-glusterFS.git
+#  mv ghichep-glusterFS/scripts/ /root/
+#  rm -rf ghichep-glusterFS/
+#  cd scripts/
+#  chmod +x *.sh 
+# 
+
 source config.cfg
 # source functions.sh
 
@@ -54,28 +63,6 @@ apt-get -y install glusterfs-server
 echocolor "Create folder"
 sleep 3
 mkdir -p /glusterfs/replica
-
-echocolor "Search the server"
-sleep 3
-gluster peer probe gfs02 
-
-echocolor "show status"
-sleep 3
-gluster peer status 
-
-echocolor "Create a volume"
-gluster volume create vol_replica replica 2 transport tcp \
-$HOST_GFS01:/glusterfs/replica \
-$HOST_GFS02:/glusterfs/replica 
-
-echocolor "Start the volume"
-sleep 3
-gluster volume start vol_replica
-
-
-echocolor "Show info"
-sleep 3
-gluster volume info 
 
 #sleep 5
 init 6
