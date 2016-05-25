@@ -15,5 +15,10 @@ bash gfs01.sh
 
 
 ## Thực hiện trên GlusterFS 02
-bash gfs02.sh
+
+gfs02-1.sh
+
+- Đăng nhập lại và chạy tiêp script 
+
+gfs02-2.sh
 
